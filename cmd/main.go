@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	resumeProfile, err := parser.ParsePDF("example/my_cv.pdf")
+	resumeProfile, err := parser.ParsePDFContent("example/my_cv.pdf")
 	if err != nil {
 		panic(err)
 	}
