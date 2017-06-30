@@ -42,7 +42,7 @@ const (
 	IndexEnd
 )
 
-func ParsePDFContent(path string) (ResumeProfile, error) {
+func ParsePDF(path string) (ResumeProfile, error) {
 	r, err := pdf.Open(path)
 	if err != nil {
 		return ResumeProfile{}, err
