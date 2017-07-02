@@ -68,6 +68,7 @@ func ParsePDF(path string) (ResumeProfile, error) {
 				lastTextStyle.S = lastTextStyle.S + text.S
 			} else {
 				if !isEmptyText(lastTextStyle.S) {
+					// fmt.Printf("Debug: %+v\n", lastTextStyle)
 					parser.parseData(lastTextStyle, sentenceIndex)
 					sentenceIndex++
 				}
