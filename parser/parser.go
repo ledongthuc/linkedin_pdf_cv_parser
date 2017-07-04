@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/ledongthuc/pdf"
@@ -36,6 +37,7 @@ const (
 	IndexBeginEducation
 	IndexEducationName
 	IndexEducationDescription
+	IndexBeginEducationActivity
 	IndexEducationActivity
 	IndexBeginHonor
 	IndexHonor
@@ -132,6 +134,9 @@ func (p *Parser) parseData(text pdf.Text, sentenceIndex int) {
 		p.Seeker = IndexContentExperience
 		return
 	}
+	fmt.Println(" - " + text.Font)
+	fmt.Printf(" - %f\n", text.FontSize)
+	fmt.Println(" - " + text.S)
 	if p.isEducationName(text, sentenceIndex) {
 		p.ResumeProfile.Educations = append(p.ResumeProfile.Educations, p.parseEducationName(text.S))
 		p.Seeker = IndexEducationName
@@ -146,6 +151,18 @@ func (p *Parser) parseData(text pdf.Text, sentenceIndex int) {
 		updatingEducation.Duration = education.Duration
 		p.ResumeProfile.Educations = append(p.ResumeProfile.Educations, updatingEducation)
 		p.Seeker = IndexEducationDescription
+		return
+	}
+	if p.isBeginEducationActivity(text, sentenceIndex) {
+		p.Seeker = IndexBeginEducationActivity
+		return
+	}
+	if p.isEducationActivity(text, sentenceIndex) {
+		updatingEducation := p.ResumeProfile.Educations[len(p.ResumeProfile.Educations)-1]
+		p.ResumeProfile.Educations = p.ResumeProfile.Educations[:len(p.ResumeProfile.Educations)-1]
+		updatingEducation.Activity = p.parseEducationActivity(text.S)
+		p.ResumeProfile.Educations = append(p.ResumeProfile.Educations, updatingEducation)
+		p.Seeker = IndexEducationActivity
 		return
 	}
 	if p.isHonor(text, sentenceIndex) {

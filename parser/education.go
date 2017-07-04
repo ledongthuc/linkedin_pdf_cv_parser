@@ -38,6 +38,20 @@ func (p *Parser) isEducationDescription(text pdf.Text, sentenceIndex int) bool {
 	return false
 }
 
+func (p *Parser) isBeginEducationActivity(text pdf.Text, sentenceIndex int) bool {
+	if p.Seeker == IndexEducationDescription && strings.HasPrefix(text.S, "Activities and Societies:") {
+		return true
+	}
+	return false
+}
+
+func (p *Parser) isEducationActivity(text pdf.Text, sentenceIndex int) bool {
+	if p.Seeker == IndexBeginEducationActivity {
+		return true
+	}
+	return false
+}
+
 // ### Parser ###
 func (p *Parser) parseEducationName(text string) (result Education) {
 	result.Name = strings.TrimSpace(text)
@@ -84,4 +98,8 @@ func (p *Parser) parseEducationDescription(text string) (result Education) {
 
 	result.Name = strings.TrimSpace(text)
 	return result
+}
+
+func (p *Parser) parseEducationActivity(text string) string {
+	return strings.TrimSpace(strings.Replace(text, "Activities and Societies: ", "", -1))
 }
